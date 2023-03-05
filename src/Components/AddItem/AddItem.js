@@ -1,8 +1,10 @@
-import React from "react";
+import React,{useRef} from "react";
 import { IoMdAdd } from "react-icons/io";
 import "./AddItems.css";
 
+
 const AddItem = ({newItem, setNewItem, handleSubmit}) => {
+  const inputRef = useRef()
   return (
     <form className="addForm" onSubmit={handleSubmit}>
       <label htmlFor="addItem" html>
@@ -10,6 +12,7 @@ const AddItem = ({newItem, setNewItem, handleSubmit}) => {
       </label>
       <input
         autoFocus
+        ref={inputRef}
         id="addItem"
         type="text"
         placeholder="Add Item"
@@ -17,7 +20,7 @@ const AddItem = ({newItem, setNewItem, handleSubmit}) => {
         value={newItem}
         onChange={(e)=>{setNewItem(e.target.value)}}
       />
-      <button type="submit" aria-label="Add Item">
+      <button onClick={()=>inputRef.current.focus()} type="submit" aria-label="Add Item">
         <IoMdAdd />
       </button>
     </form>
