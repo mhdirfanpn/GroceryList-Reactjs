@@ -5,6 +5,7 @@ import Header from "./Components/Header/Header";
 import { useState, useEffect } from "react";
 import AddItem from "./Components/AddItem/AddItem";
 import SearchItem from "./Components/SearchItem/SearchItem";
+import apiRequest from "./apiRequest";
 
 function App() {
   const API_URL = "  http://localhost:3500/items";
@@ -21,7 +22,6 @@ function App() {
         const response = await fetch(API_URL);
         if (!response.ok) throw Error("Did not receive expected data");
         const listItems = await response.json();
-        console.log(listItems);
         setItems(listItems);
         setFetchError(null);
       } catch (err) {
@@ -36,12 +36,26 @@ function App() {
    
   }, []);
 
-  const addItem = (item) => {
+ 
+  const addItem = async(item) => {
     const id = items?.length ? items[items.length - 1].id + 1 : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
     setItems(listItems);
+
+    const postOptions = {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify(myNewItem)
+    }
+    const result = await apiRequest(API_URL,postOptions)
+    if(result) setFetchError(result)
   };
+
+  
+
 
   const handleCheck = (id) => {
     const listItems = items.map((obj) =>
